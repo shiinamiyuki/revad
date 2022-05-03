@@ -110,7 +110,20 @@ impl<'t> ::std::ops::Add for Var<'t> {
         }
     }
 }
-
+impl<'t> ::std::ops::Sub for Var<'t> {
+    type Output = Var<'t>;
+    fn sub(self, other: Var<'t>) -> Self::Output {
+        assert_eq!(self.tape as *const Tape, other.tape as *const Tape);
+        Var {
+            tape: self.tape,
+            value: self.value - other.value,
+            index: self.tape.push2(
+                self.index, 1.0,
+                other.index, -1.0,
+           ),
+        }
+    }
+}
 impl<'t> ::std::ops::Mul for Var<'t> {
     type Output = Var<'t>;
     fn mul(self, other: Var<'t>) -> Self::Output {
